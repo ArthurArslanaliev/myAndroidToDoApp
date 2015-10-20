@@ -3,4 +3,7 @@
     <string name="new_item_placeholder">Enter a new item</string>
     <string name="add_item_button_text">Add Item</string>
     <string name="file_storage">todo.txt</string>
+    <string name="context_menu_title">Context Menu</string>
+    <string name="context_menu_action_edit">Edit</string>
+    <string name="context_menu_action_delete">Delete</string>
 </resources>
