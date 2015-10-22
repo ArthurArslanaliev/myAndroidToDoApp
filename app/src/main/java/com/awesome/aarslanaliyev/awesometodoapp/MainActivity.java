@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements EditItemFragment.OnCompleteListener {
+public class MainActivity extends AppCompatActivity implements EditItemFragment.OnItemEditedListener {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private FileStorage storage;
@@ -124,11 +124,12 @@ public class MainActivity extends AppCompatActivity implements EditItemFragment.
     }
 
     @Override
-    public void onComplete(String itemValue, Integer itemPosition) {
+    public void onSave(String itemValue, Integer itemPosition) {
         if (itemValue.length() > 0) {
             String formatted = String.format("%s - %s", itemValue, getCurrentTimeStamp());
             this.items.set(itemPosition, formatted);
             this.itemsAdapter.notifyDataSetChanged();
+            storage.writeViewItems(items, listView);
         }
     }
 }

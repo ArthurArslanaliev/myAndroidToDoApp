@@ -14,11 +14,11 @@ import android.widget.EditText;
 
 public class EditItemFragment extends DialogFragment {
 
-    public interface OnCompleteListener {
-        void onComplete(String itemValue, Integer itemPosition);
+    public interface OnItemEditedListener {
+        void onSave(String itemValue, Integer itemPosition);
     }
 
-    private OnCompleteListener mListener;
+    private OnItemEditedListener mListener;
 
     static final String EDIT_ITEM_KEY = "edit_item";
     static final String POSITION_KEY = "item_position";
@@ -65,16 +65,16 @@ public class EditItemFragment extends DialogFragment {
     }
 
     public void notifyListeners(String itemValue, Integer position) {
-        this.mListener.onComplete(itemValue, position);
+        this.mListener.onSave(itemValue, position);
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            this.mListener = (OnCompleteListener)activity;
+            this.mListener = (OnItemEditedListener)activity;
         }
         catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+            throw new ClassCastException(activity.toString() + " must implement OnItemEditedListener");
         }
     }
 }
