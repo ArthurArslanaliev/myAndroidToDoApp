@@ -9,4 +9,6 @@
     <string name="context_menu_action_check">Set as completed</string>
     <string name="context_menu_action_uncheck">Remove from completed</string>
     <string name="quit_button">Quit</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

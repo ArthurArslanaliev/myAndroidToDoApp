@@ -1,6 +1,7 @@
 package com.awesome.aarslanaliyev.awesometodoapp;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -18,13 +19,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditItemFragment.OnCompleteListener {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private FileStorage storage;
     private ListView listView;
 
     final int DELETE_ACTION_ID = 1;
+    final int EDIT_ITEM_ID = 2;
     final int CHECK_ITEM_ID = 3;
     final int UNCHECK_ITEM_ID = 4;
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             menu.add(0, CHECK_ITEM_ID, 0, R.string.context_menu_action_check);
         }
 
+        menu.add(0, EDIT_ITEM_ID, 1, R.string.context_menu_action_edit);
         menu.add(0, DELETE_ACTION_ID, 2, R.string.context_menu_action_delete);
     }
 
@@ -96,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
                 itemsAdapter.notifyDataSetChanged();
                 storage.writeViewItems(items, listView);
                 return true;
+            case EDIT_ITEM_ID:
+                FragmentManager fm = getSupportFragmentManager();
+                EditItemFragment modal = EditItemFragment.instance(items.get(info.position), info.position);
+                modal.show(fm, "EDIT_ITEM");
+                return true;
             case UNCHECK_ITEM_ID:
                 listView.setItemChecked(info.position, false);
                 itemsAdapter.notifyDataSetChanged();
@@ -113,5 +121,14 @@ public class MainActivity extends AppCompatActivity {
     public void Quit(MenuItem item) {
         finish();
         System.exit(0);
+    }
+
+    @Override
+    public void onComplete(String itemValue, Integer itemPosition) {
+        if (itemValue.length() > 0) {
+            String formatted = String.format("%s - %s", itemValue, getCurrentTimeStamp());
+            this.items.set(itemPosition, formatted);
+            this.itemsAdapter.notifyDataSetChanged();
+        }
     }
 }
