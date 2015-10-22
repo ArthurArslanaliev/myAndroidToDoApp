@@ -6,4 +6,7 @@
     <string name="context_menu_title">Context Menu</string>
     <string name="context_menu_action_edit">Edit</string>
     <string name="context_menu_action_delete">Delete</string>
+    <string name="context_menu_action_check">Set as completed</string>
+    <string name="context_menu_action_uncheck">Remove from completed</string>
+    <string name="quit_button">Quit</string>
 </resources>

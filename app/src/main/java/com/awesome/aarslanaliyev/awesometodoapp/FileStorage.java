@@ -1,5 +1,11 @@
 package com.awesome.aarslanaliyev.awesometodoapp;
 
+import android.util.SparseBooleanArray;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.google.gson.Gson;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -15,21 +21,43 @@ public class FileStorage {
         this.fileName = fileName;
     }
 
-    public ArrayList<String> readItems() {
-        File todoFile = new File(this.filesDir, this.fileName);
-        ArrayList<String> items;
+    public void readItems(ListView listView, ArrayAdapter<String> adapter) {
+        File storage = new File(this.filesDir, this.fileName);
         try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            items = new ArrayList<>();
+            String jsonString = FileUtils.readFileToString(storage);
+            Gson gson = new Gson();
+            ArrayList deserialize = gson.fromJson(jsonString, ArrayList.class);
+            for (int i = 0; i < deserialize.size(); i++) {
+                ArrayList item = (ArrayList)deserialize.get(i);
+                String text = (String) item.get(0);
+                Boolean isChecked = (Boolean) item.get(1);
+                adapter.add(text);
+                if (isChecked) {
+                    listView.setItemChecked(i, true);
+                }
+            }
+        } catch (IOException ignored) {
         }
-        return items;
     }
 
-    public void writeItems(ArrayList<String> items) {
-        File todoFile = new File(this.filesDir, this.fileName);
+    public void writeViewItems(ArrayList<String> items, ListView listView) {
+        SparseBooleanArray checked = listView.getCheckedItemPositions();
+        ArrayList<Object[]> toSerialize = new ArrayList<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            if (checked.get(i)) {
+                toSerialize.add(i, new Object[]{items.get(i), true});
+            } else {
+                toSerialize.add(i, new Object[]{items.get(i), false});
+            }
+        }
+
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(toSerialize);
+
+        File storage = new File(this.filesDir, this.fileName);
         try {
-            FileUtils.writeLines(todoFile, items);
+            FileUtils.writeStringToFile(storage, jsonString);
         } catch (IOException e) {
             e.printStackTrace();
         }
